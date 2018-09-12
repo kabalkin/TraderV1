@@ -1,0 +1,13 @@
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
+
+namespace TraderV1.Models
+{
+    public class MessagesHub : Hub
+    {
+        public async Task Send(string message)
+        {
+            await this.Clients.All.SendAsync("Send", message);
+        }
+    }
+}

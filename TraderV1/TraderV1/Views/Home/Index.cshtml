@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div id="testik">
+    
+</div>
+
+<script src="js/signalr.min.js"></script>
+<script>
+    let hubUrl = 'http://localhost:5000/message';
+    const hubConnection = new signalR.HubConnectionBuilder()
+        .withUrl(hubUrl)
+        .configureLogging(signalR.LogLevel.Information)
+        .build();
+ 
+    hubConnection.on("Send", function (data) {
+        var html = $('#testik').html();
+        html += `<p>${data}</p>`;
+        $('#testik').html(html);
+    });
+         
+//    document.getElementById("sendBtn").addEventListener("click", function (e) {
+//        let message = document.getElementById("message").value;
+//        hubConnection.invoke("Send", message);
+//    });
+ 
+    hubConnection.start();
+</script>
+
+
