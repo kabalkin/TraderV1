@@ -4,12 +4,17 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Jint-netcore" Version="2.7.1-final" />
-    <PackageReference Include="Microsoft.AspNet.SignalR.Core" Version="2.3.0" />
     <PackageReference Include="Microsoft.AspNet.SignalR.JS" Version="2.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0-preview1-35029" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0-preview2-35157" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="wwwroot\css\site.css">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>

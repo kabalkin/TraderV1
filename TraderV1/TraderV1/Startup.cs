@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TraderV1.Models;
@@ -56,6 +57,12 @@ namespace TraderV1
             app.UseSignalR(routes =>
             {
                 routes.MapHub<MessagesHub>("/message");
+            });
+            
+            app.Use(next => async (context) =>
+            {
+                var hubContext = context.RequestServices
+                    .GetRequiredService<IHubContext<MessagesHub>>();                
             });
         }
     }

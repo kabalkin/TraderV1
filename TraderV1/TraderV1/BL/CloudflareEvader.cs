@@ -5,16 +5,13 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
-using Microsoft.AspNetCore.SignalR;
+using TraderV1.Controllers;
 using TraderV1.Models;
 
 namespace TraderV1.BL
 {
    public class CloudflareEvader
-    {
-        static MessagesHub hub = new MessagesHub();
-        
-        
+    {                       
         public static CookieContainer CreateBypassedWebClient(string url, WebProxy proxy)
         {
             var JSEngine = new Jint.Engine();
@@ -37,7 +34,7 @@ namespace TraderV1.BL
                     html = reader.ReadToEnd();
 
                 //TODO:   Program.messages.Add(Program.GetDateFormat(DateTime.Now) + "\tCloudflareEvader status --> OK\n", ConsoleColor.Magenta);
-                hub.Send("CloudflareEvader status --> OK");
+                HomeController.Send("CloudflareEvader status --> OK");
               
 
                 return new CookieContainer();
@@ -46,7 +43,7 @@ namespace TraderV1.BL
             {
                 if (ex.Message == "Удаленный сервер возвратил ошибку: (429) Too Many Requests.")
                 {
-                    hub.Send("Have banned Sleep 10 minutes");
+                    HomeController.Send("Have banned Sleep 10 minutes");
 
                    
                    //TODO: Program.messages.Add(Program.GetDateFormat(DateTime.Now) + "\tHave banned Sleep 10 minutes\n", ConsoleColor.Red);
@@ -54,8 +51,8 @@ namespace TraderV1.BL
                     Thread.Sleep(600000);
                 }
 
-                hub.Send("ex.Message");
-                hub.Send("Try AntiDDoS CloudflareEvader | status --> Try");
+                HomeController.Send("ex.Message");
+                HomeController.Send("Try AntiDDoS CloudflareEvader | status --> Try");
 
                
 
@@ -124,7 +121,7 @@ namespace TraderV1.BL
                     }
                 }
 
-                hub.Send("AntiDDoS CloudflareEvader | status --> Success");
+                HomeController.Send("AntiDDoS CloudflareEvader | status --> Success");
 
                 
                //TODO:  Program.messages.Add(Program.GetDateFormat(DateTime.Now) + "\tTry AntiDDoS CloudflareEvader | status --> Success\n", ConsoleColor.Magenta);
