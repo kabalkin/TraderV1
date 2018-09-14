@@ -15,9 +15,7 @@ using TraderV1.BL;
 using TraderV1.Models;
 
 namespace TraderV1.Controllers
-{
-    
-    
+{        
     [Authorize]
     public class HomeController : Controller
     {
@@ -37,8 +35,7 @@ namespace TraderV1.Controllers
         {
             _hubContext = hubContext;
         }
-        
-       
+               
         
         public IActionResult Index()
         {
@@ -59,11 +56,10 @@ namespace TraderV1.Controllers
             Send("Try Start Procces");
             
             Task.Run(() => { Run(); });
-
     
-
             return true;
         }
+        
         
         public bool StopProcces()
         {
@@ -74,9 +70,6 @@ namespace TraderV1.Controllers
         }
 
       
-
-       
-
         static bool flagToStop = false;
         public static CookieContainer coockie = null;
         static WebProxy webProxy = null;
@@ -97,8 +90,7 @@ namespace TraderV1.Controllers
             //bool isBuy = comboBox1.SelectedIndex == 0;
             bool isBuy = true;
 
-           // pairs[valuets] = new Pair(valuets, isBuy, decimal.Parse(textBox3.Text), 0);
-           
+           // pairs[valuets] = new Pair(valuets, isBuy, decimal.Parse(textBox3.Text), 0);           
 
             Start:
 
@@ -109,7 +101,6 @@ namespace TraderV1.Controllers
 
             string result = "";
             
-
             try
             {                
                 if (coockie != null)
