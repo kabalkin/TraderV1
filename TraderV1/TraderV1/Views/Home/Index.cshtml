@@ -20,7 +20,7 @@
 
 
 <script>
-        
+    var chartData = [];
   
     
     let hubUrl = 'http://localhost:5000/message';
@@ -35,16 +35,20 @@
     
     
     hubConnection.on("SendData", function (data) {
+      var newObj = JSON.parse(data);
       
-      var html = $('#testik').html();
-      html = `<p>${data}</p>`;
-      $('#testik').html(html);
+      
+      chartData.push( {
+        "date": newObj.dateTome,
+        "value": newObj.coast
+      } );
+      
+      chart.validateData();
+      
+      $('#testik').html(newObj.dateTome + '   '  + newObj.coast);
     });
          
-//    document.getElementById("sendBtn").addEventListener("click", function (e) {
-//        let message = document.getElementById("message").value;
-//        hubConnection.invoke("Send", message);
-//    });
+
  
     hubConnection.start();
     
@@ -76,34 +80,7 @@
 
     });
     
-    
-    
-</script>
-
-<script>
-var chartData = [];
-generateChartData();
-
-function generateChartData() {
-  var firstDate = new Date( 2012, 0, 1 );
-  firstDate.setDate( firstDate.getDate() - 500 );
-  firstDate.setHours( 0, 0, 0, 0 );
-
-  for ( var i = 0; i < 500; i++ ) {
-    var newDate = new Date( firstDate );
-    newDate.setDate( newDate.getDate() + i );
-
-    var a = Math.round( Math.random() * ( 40 + i ) ) + 100 + i;
-    var b = Math.round( Math.random() * 100000000 );
-
-    chartData.push( {
-      "date": newDate,
-      "value": a
-    } );
-  }
-}
-
-var chart = AmCharts.makeChart( "chartdiv", {
+    var chart = AmCharts.makeChart( "chartdiv", {
   "type": "stock",
   "theme": "dark",
   "dataSets": [ {
@@ -247,6 +224,33 @@ var chart = AmCharts.makeChart( "chartdiv", {
     "enabled": true
   }
 } );
+    
+</script>
+
+<script>
+
+//generateChartData();
+//
+//function generateChartData() {
+//  var firstDate = new Date( 2012, 0, 1 );
+//  firstDate.setDate( firstDate.getDate() - 500 );
+//  firstDate.setHours( 0, 0, 0, 0 );
+//
+//  for ( var i = 0; i < 500; i++ ) {
+//    var newDate = new Date( firstDate );
+//    newDate.setDate( newDate.getDate() + i );
+//
+//    var a = Math.round( Math.random() * ( 40 + i ) ) + 100 + i;
+//    var b = Math.round( Math.random() * 100000000 );
+//
+//    chartData.push( {
+//      "date": newDate,
+//      "value": a
+//    } );
+//  }
+//}
+
+
 </script>
     
 

@@ -83,8 +83,7 @@ namespace TraderV1.Controllers
 
 
         private void Run()
-        {
-            bool proc = true;    
+        {    
             string valuets = "doge_rur";
 
             //bool isBuy = comboBox1.SelectedIndex == 0;
@@ -194,19 +193,14 @@ namespace TraderV1.Controllers
 
                // pairs[item.Name].Update(item.Sell);
 
+                DateTime date = DateTime.Now;
+                var data = new {dateTome = date, coast = item.Sell};
+                string jsonString = JsonConvert.SerializeObject(data);
+                
+                SendData(jsonString);
 
-                if (proc)
-                {
-                    SendData(item.Sell.ToString());
 
-                }
-                else
-                {
-                    SendData(item.Sell.ToString()+"  . . .");
-   
-                }
-
-                proc = !proc;
+              
                 
                // precentOut = pairs[item.Name].PrecentCoast;
 
