@@ -36,10 +36,10 @@
     
     hubConnection.on("SendData", function (data) {
       var newObj = JSON.parse(data);
-      
+      var date = Date.parse(newObj.dateTome);
       
       chartData.push( {
-        "date": newObj.dateTome,
+        "date": date,
         "value": newObj.coast
       } );
       
@@ -90,7 +90,12 @@
       "toField": "value"
     } ],
     "dataProvider": chartData,
-    "categoryField": "date"
+    "categoryField": "date",
+    "categoryAxis": {
+      "parseDates": true,
+      "minPeriod" : "mm"
+
+    }
     //    ,
     //    // EVENTS
     //    "stockEvents": [ {
@@ -195,27 +200,27 @@
     "valueLineAlpha": 0.5
   },
 
-  "periodSelector": {
-    "periods": [ {
-      "period": "DD",
-      "count": 10,
-      "label": "10 days"
-    }, {
-      "period": "MM",
-      "count": 1,
-      "label": "1 month"
-    }, {
-      "period": "YYYY",
-      "count": 1,
-      "label": "1 year"
-    }, {
-      "period": "YTD",
-      "label": "YTD"
-    }, {
-      "period": "MAX",
-      "label": "MAX"
-    } ]
-  },
+//  "periodSelector": {
+//    "periods": [ {
+//      "period": "DD",
+//      "count": 10,
+//      "label": "10 days"
+//    }, {
+//      "period": "MM",
+//      "count": 1,
+//      "label": "1 month"
+//    }, {
+//      "period": "YYYY",
+//      "count": 1,
+//      "label": "1 year"
+//    }, {
+//      "period": "YTD",
+//      "label": "YTD"
+//    }, {
+//      "period": "MAX",
+//      "label": "MAX"
+//    } ]
+//  },
 
   "panelsSettings": {
     "usePrefixes": true

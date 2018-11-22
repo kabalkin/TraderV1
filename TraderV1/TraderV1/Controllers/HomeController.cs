@@ -7,6 +7,7 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Jint.Native;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -72,7 +73,7 @@ namespace TraderV1.Controllers
       
         static bool flagToStop = false;
         public static CookieContainer coockie = null;
-        static WebProxy webProxy = null;
+        private static WebProxy webProxy = new WebProxy("46.63.58.139:53281");
         static decimal precentOut = 0;
 
 
@@ -84,7 +85,7 @@ namespace TraderV1.Controllers
 
         private void Run()
         {    
-            string valuets = "doge_rur";
+            string valuets = "btc_usd";
 
             //bool isBuy = comboBox1.SelectedIndex == 0;
             bool isBuy = true;
