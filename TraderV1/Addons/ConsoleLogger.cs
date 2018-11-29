@@ -6,7 +6,7 @@ namespace Addons
     {
         public void Log(string message)
         {
-            Console.WriteLine(message);
+            Console.WriteLine("["+DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss")+"]\t"+message);
         }
     }
 }

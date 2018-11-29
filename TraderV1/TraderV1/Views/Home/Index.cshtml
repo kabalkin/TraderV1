@@ -36,13 +36,27 @@
     
     hubConnection.on("SendData", function (data) {
       var newObj = JSON.parse(data);
-      var date = Date.parse(newObj.dateTome);
-      
+      var date = Date.parse(newObj.dateTome);       
+    
       chartData.push( {
         "date": date,
         "value": newObj.coast
-      } );
-      
+        });
+
+        var firstDate = new Date(date);
+
+        chartEvents.push({ //this is overwriting the array each time. if you want to just add to it, use push.
+            date: firstDate,
+            type: "sign",
+            backgroundColor: "#85CDE6",
+            text: "S",
+            graph: "g1",
+            description: "Some longer\ntext can also\n be added"
+        });
+
+        chart.dataSets[0].stockEvents = chartEvents; 
+
+     
       chart.validateData();
       
       $('#testik').html(newObj.dateTome + '   '  + newObj.coast);
@@ -80,182 +94,80 @@
 
     });
     
-    var chart = AmCharts.makeChart( "chartdiv", {
-  "type": "stock",
-  "theme": "dark",
-  "dataSets": [ {
-    "color": "white",
-    "fieldMappings": [ {
-      "fromField": "value",
-      "toField": "value"
-    } ],
-    "dataProvider": chartData,
-    "categoryField": "date",
-    "categoryAxis": {
-      "parseDates": true,
-      "minPeriod" : "mm"
+    var chartData = [];
+    var chartEvents = [];
+        
 
-    }
-    //    ,
-    //    // EVENTS
-    //    "stockEvents": [ {
-    //      "date": new Date( 2010, 8, 19 ),
-    //      "type": "sign",
-    //      "backgroundColor": "#85CDE6",
-    //      "graph": "g1",
-    //      "text": "S",
-    //      "description": "This is description of an event"
-    //    }, {
-    //      "date": new Date( 2010, 10, 19 ),
-    //      "type": "flag",
-    //      "backgroundColor": "#FFFFFF",
-    //      "backgroundAlpha": 0.5,
-    //      "graph": "g1",
-    //      "text": "F",
-    //      "description": "Some longer\ntext can also\n be added"
-    //    }, {
-    //      "date": new Date( 2010, 11, 10 ),
-    //      "showOnAxis": true,
-    //      "backgroundColor": "#85CDE6",
-    //      "type": "pin",
-    //      "text": "X",
-    //      "graph": "g1",
-    //      "description": "This is description of an event"
-    //    }, {
-    //      "date": new Date( 2010, 11, 26 ),
-    //      "showOnAxis": true,
-    //      "backgroundColor": "#85CDE6",
-    //      "type": "pin",
-    //      "text": "Z",
-    //      "graph": "g1",
-    //      "description": "This is description of an event"
-    //    }, {
-    //      "date": new Date( 2011, 0, 3 ),
-    //      "type": "sign",
-    //      "backgroundColor": "#85CDE6",
-    //      "graph": "g1",
-    //      "text": "U",
-    //      "description": "This is description of an event"
-    //    }, {
-    //      "date": new Date( 2011, 1, 6 ),
-    //      "type": "sign",
-    //      "graph": "g1",
-    //      "text": "D",
-    //      "description": "This is description of an event"
-    //    }, {
-    //      "date": new Date( 2011, 3, 5 ),
-    //      "type": "sign",
-    //      "graph": "g1",
-    //      "text": "L",
-    //      "description": "This is description of an event"
-    //    }, {
-    //      "date": new Date( 2011, 3, 5 ),
-    //      "type": "sign",
-    //      "graph": "g1",
-    //      "text": "R",
-    //      "description": "This is description of an event"
-    //    }, {
-    //      "date": new Date( 2011, 5, 15 ),
-    //      "type": "arrowUp",
-    //      "backgroundColor": "#00CC00",
-    //      "graph": "g1",
-    //      "description": "This is description of an event"
-    //    }, {
-    //      "date": new Date( 2011, 6, 25 ),
-    //      "type": "arrowDown",
-    //      "backgroundColor": "#CC0000",
-    //      "graph": "g1",
-    //      "description": "This is description of an event"
-    //    }, {
-    //      "date": new Date( 2011, 8, 1 ),
-    //      "type": "text",
-    //      "graph": "g1",
-    //      "text": "Longer text can\nalso be displayed",
-    //      "description": "This is description of an event"
-    //    } ]
-  } ],
+    var chart = AmCharts.makeChart("chartdiv", {
+        "type": "stock",
+        "theme": "dark",
+        "zoomOutOnDataSetChange":true,
+        "categoryAxesSettings": {
+            "minPeriod": "ss"
+        },
+        "dataSets": [{
+            "color": "#b0de09",
+            "fieldMappings": [{
+                "fromField": "value",
+                "toField": "value"
+            }, {
+                "fromField": "volume",
+                "toField": "volume"
+            }],
+            "dataProvider": chartData,
+            "categoryField": "date",     
+            // EVENTS
+            
+        }],
 
 
-  "panels": [ {
-    "title": "Value",
-    "stockGraphs": [ {
-      "id": "g1",
-      "valueField": "value"
-    } ],
-    "stockLegend": {
-      "valueTextRegular": " ",
-      "markerType": "none"
-    }
-  } ],
+        "panels": [{
+            "title": "Value",
+            "stockGraphs": [{
+                "id": "g1",
+                "valueField": "value"
+            }],
+            "stockLegend": {
+                "valueTextRegular": " ",
+                "markerType": "none"
+            }
+        }],
 
-  "chartScrollbarSettings": {
-    "graph": "g1"
-  },
+        "chartScrollbarSettings": {
+            "graph": "g1"
+        },
 
-  "chartCursorSettings": {
-    "valueBalloonsEnabled": true,
-    "graphBulletSize": 1,
-    "valueLineBalloonEnabled": true,
-    "valueLineEnabled": true,
-    "valueLineAlpha": 0.5
-  },
+        "chartCursorSettings": {
+            "valueBalloonsEnabled": true,
+            "graphBulletSize": 1,
+            "valueLineBalloonEnabled": true,
+            "valueLineEnabled": true,
+            "valueLineAlpha": 0.5
+        },
 
-//  "periodSelector": {
-//    "periods": [ {
-//      "period": "DD",
-//      "count": 10,
-//      "label": "10 days"
-//    }, {
-//      "period": "MM",
-//      "count": 1,
-//      "label": "1 month"
-//    }, {
-//      "period": "YYYY",
-//      "count": 1,
-//      "label": "1 year"
-//    }, {
-//      "period": "YTD",
-//      "label": "YTD"
-//    }, {
-//      "period": "MAX",
-//      "label": "MAX"
-//    } ]
-//  },
+        "periodSelector": {
+            "periods": [{
+                "period": "DD",
+                "count": 1,
+                "label": "day"
+            }, {
+                "period": "mm",
+                "count": 1,
+                "label": "minute"
+            },  {
+                "period": "MAX",
+                "label": "MAX"
+            }]
+        },
 
-  "panelsSettings": {
-    "usePrefixes": true
-  },
-  "export": {
-    "enabled": true
-  }
-} );
+        "panelsSettings": {
+            "usePrefixes": true
+        },
+        "export": {
+            "enabled": true
+        }
+    });
     
-</script>
-
-<script>
-
-//generateChartData();
-//
-//function generateChartData() {
-//  var firstDate = new Date( 2012, 0, 1 );
-//  firstDate.setDate( firstDate.getDate() - 500 );
-//  firstDate.setHours( 0, 0, 0, 0 );
-//
-//  for ( var i = 0; i < 500; i++ ) {
-//    var newDate = new Date( firstDate );
-//    newDate.setDate( newDate.getDate() + i );
-//
-//    var a = Math.round( Math.random() * ( 40 + i ) ) + 100 + i;
-//    var b = Math.round( Math.random() * 100000000 );
-//
-//    chartData.push( {
-//      "date": newDate,
-//      "value": a
-//    } );
-//  }
-//}
-
-
 </script>
     
 

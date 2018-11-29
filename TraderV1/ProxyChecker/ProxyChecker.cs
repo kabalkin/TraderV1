@@ -84,6 +84,7 @@ namespace ProxyChecker
                 }
 
                 list.Add(proxy);
+                Console.WriteLine("-----------------------------------------------------------------------");
             }
 
             return list.ToArray();

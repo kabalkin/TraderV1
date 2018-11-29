@@ -73,7 +73,7 @@ namespace TraderV1.Controllers
       
         static bool flagToStop = false;
         public static CookieContainer coockie = null;
-        private static WebProxy webProxy = new WebProxy("46.63.58.139:53281");
+        private static WebProxy webProxy = new WebProxy("54.39.186.230:8080");
         static decimal precentOut = 0;
 
 
@@ -192,10 +192,10 @@ namespace TraderV1.Controllers
                     //DateUpdate = (long)stuff[valuets]["updated"]
                 };
 
-               // pairs[item.Name].Update(item.Sell);
+                // pairs[item.Name].Update(item.Sell);
 
-                DateTime date = DateTime.Now;
-                var data = new {dateTome = date, coast = item.Sell};
+                
+                var data = new {dateTome = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"), coast = item.Sell};
                 string jsonString = JsonConvert.SerializeObject(data);
                 
                 SendData(jsonString);
