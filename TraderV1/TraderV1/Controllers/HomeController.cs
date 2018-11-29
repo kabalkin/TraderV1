@@ -232,8 +232,9 @@ namespace TraderV1.Controllers
           
         }
 
+       
 
-       // static Dictionary<string, Pair> pairs = new Dictionary<string, Pair>();
-        
+        // static Dictionary<string, Pair> pairs = new Dictionary<string, Pair>();
+
     }
 }
