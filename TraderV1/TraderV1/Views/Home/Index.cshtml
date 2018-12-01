@@ -7,21 +7,38 @@
 <button id="stopBtn" class="btn">Stop</button>
 
 
+<div class="panel">
+    <div id="console">
+    
+    </div>
+</div>
+<a class="trigger" href="#">Кнопка</a>
+
 <div id="testik">
     
     </div>
 
 
 
+
+
 <div id="chartdiv"></div>
 
-<div id="console">
-    
-</div>
+
 
 
 
 <script>
+
+    $(document).ready(function(){
+        $(".trigger").click(function(){
+            $(".panel").toggle("fast");
+            $(this).toggleClass("active");
+            return false;
+        });
+    });
+    
+    
     var chartData = [];
   
     
@@ -55,12 +72,12 @@
     
     
     hubConnection.on("SendData", function (data) {
-      var newObj = JSON.parse(data);
-      var date = Date.parse(newObj.dateTome);       
+        var newObj = JSON.parse(data);
+        var date = Date.parse(newObj.dateTome);       
     
-      chartData.push( {
-        "date": date,
-        "value": newObj.coast
+        chartData.push( {
+            "date": date,
+            "value": newObj.coast
         });
 
         var firstDate = new Date(date);
@@ -77,9 +94,9 @@
         chart.dataSets[0].stockEvents = chartEvents; 
 
      
-      chart.validateData();
+        chart.validateData();
       
-      $('#testik').html(newObj.dateTome + '   '  + newObj.coast);
+        $('#testik').html(newObj.dateTome + '   '  + newObj.coast);
     });
          
 
@@ -101,15 +118,15 @@
     
     
     $('#stopBtn').click(function () {
-      $.ajax({
-          url: '@Url.Action("StopProcces","Home")',
-          type: 'POST',
-          dataType: 'json'
+        $.ajax({
+                url: '@Url.Action("StopProcces","Home")',
+                type: 'POST',
+                dataType: 'json'
 
-        })
-        .success(function(result) {
+            })
+            .success(function(result) {
 
-        });
+            });
                 
 
     });
@@ -187,9 +204,12 @@
             "enabled": true
         }
     });
-    
+
 </script>
     
+
+
+
 
 
 
