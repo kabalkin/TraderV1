@@ -15,7 +15,9 @@
 
 <div id="chartdiv"></div>
 
-
+<div id="console">
+    
+</div>
 
 
 
@@ -32,6 +34,24 @@
     hubConnection.on("Send", function (data) {               
         $.notify(data, "info");
     });
+
+
+    hubConnection.on("SendToConsole",
+        function(data) {
+            if (true) {
+                var con = $('#console');
+                var currentHtml = $(con).html();
+                var newHtml = currentHtml + '<br>' + data;
+                $(con).html(newHtml);
+                
+                
+                var block = document.getElementById("console");
+                block.scrollTop = block.scrollHeight;
+                
+                
+                
+            }
+        });
     
     
     hubConnection.on("SendData", function (data) {

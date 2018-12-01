@@ -3,7 +3,6 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Jint-netcore" Version="2.7.1-final" />
     <PackageReference Include="Microsoft.AspNet.SignalR.JS" Version="2.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0-preview2-35157" />
@@ -16,5 +15,9 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Addons\Addons.csproj" />
+    <ProjectReference Include="..\ProxyChecker\ProxyChecker.csproj" />
   </ItemGroup>
 </Project>

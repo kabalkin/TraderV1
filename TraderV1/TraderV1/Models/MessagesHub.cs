@@ -15,5 +15,10 @@ namespace TraderV1.Models
         {
             await this.Clients.All.SendAsync("SendData", message);
         }
+
+        public async Task SendToConsole(string message)
+        {
+            await this.Clients.All.SendAsync("SendToConsole", message);
+        }
     }
 }

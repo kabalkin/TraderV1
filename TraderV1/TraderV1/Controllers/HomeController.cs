@@ -2,24 +2,39 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Addons;
 using Jint.Native;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using TraderV1.BL;
 using TraderV1.Models;
+using ProxyChecker;
+using TraderV1.Addons;
 
 namespace TraderV1.Controllers
 {        
     [Authorize]
     public class HomeController : Controller
     {
+        private IHostingEnvironment _env;
+        
+        public HomeController(IHostingEnvironment env, IHubContext<MessagesHub> hubContext)
+        {
+            _env = env;
+            _hubContext = hubContext;
+
+        }
+        
         public static void Send(string message)
         {
             _hubContext.Clients.All.SendAsync("Send", message);
@@ -32,10 +47,7 @@ namespace TraderV1.Controllers
         
         private static  IHubContext<MessagesHub> _hubContext;
 
-        public HomeController(IHubContext<MessagesHub> hubContext)
-        {
-            _hubContext = hubContext;
-        }
+       
                
         
         public IActionResult Index()
@@ -72,9 +84,10 @@ namespace TraderV1.Controllers
 
       
         static bool flagToStop = false;
-        public static CookieContainer coockie = null;
-        private static WebProxy webProxy = new WebProxy("54.39.186.230:8080");
+        private static CookieContainer _coockie = null;
+        private static WebProxy webProxy = null;
         static decimal precentOut = 0;
+        readonly AdditionalConsoleLogger conLogger = new AdditionalConsoleLogger(_hubContext);
 
 
         public static CookieContainer GetCookie(string valuets)
@@ -84,7 +97,34 @@ namespace TraderV1.Controllers
 
 
         private void Run()
-        {    
+        {
+            if (true)
+            {
+                string proxyFilePath = Path.Combine(_env.WebRootPath, "proxyServers.txt");         
+                ProxyChecker.ProxyChecker checker = new ProxyChecker.ProxyChecker(conLogger, proxyFilePath);
+                Proxy[] proxys = checker.Check(checker.ProxyList, "https://yobit.net/api/3/ticker/btc_usd");
+                Proxy bestProxy = proxys.Where(s=>s.IsWork).OrderBy(s=>s.Ping).First();
+
+                if (!bestProxy.IsWork)
+                {
+                    throw new BadProxyException("Нет подходящего прокси сервера, нужно обновить список");
+                }
+
+
+                foreach (var prox in proxys)
+                {
+                    conLogger.Log(prox.ToString() + "\t" + prox.IsWork + "\t" + prox.Ping + " ms");    
+                }
+                
+                conLogger.Log("          *****          ");
+                conLogger.Log("The best --> " + bestProxy.ToString() + "\t ping --> " + bestProxy.Ping);
+                
+                
+                
+                webProxy = new WebProxy(bestProxy.ToString());
+            }
+           
+            
             string valuets = "btc_usd";
 
             //bool isBuy = comboBox1.SelectedIndex == 0;
@@ -103,9 +143,9 @@ namespace TraderV1.Controllers
             
             try
             {                
-                if (coockie != null)
+                if (_coockie != null)
                 {
-                    WebClient modedWebClient = new WebClientEx(coockie);
+                    WebClient modedWebClient = new WebClientEx(_coockie);
                     modedWebClient.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0");
                     modedWebClient.Headers.Add("Referer", "https://yobit.net/api/3/ticker/" + valuets);
                     if (webProxy != null)
@@ -121,21 +161,21 @@ namespace TraderV1.Controllers
                     {
                         Send(ex.Message);
                         //TODO 429 need proxy
-                        coockie = null;
+                        _coockie = null;
                         goto Start;
                     }
                 }
                 else
                 {
                     coockieAgain:
-                    coockie = GetCookie(valuets);
-                    if (coockie == null)
+                    _coockie = GetCookie(valuets);
+                    if (_coockie == null)
                     {
                         Send("cookieAgain after 10 sec");
                         Thread.Sleep(10000);
                         goto coockieAgain;
                     }
-                    WebClient modedWebClient = new WebClientEx(coockie);
+                    WebClient modedWebClient = new WebClientEx(_coockie);
                     modedWebClient.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0");
                     modedWebClient.Headers.Add("Referer", "https://yobit.net/api/3/ticker/" + valuets);
 
@@ -151,14 +191,14 @@ namespace TraderV1.Controllers
             {
                 Send("Fix for proxy TODO");
                 Send(ex.Message);
-                coockie = null;
+                _coockie = null;
                 goto Start;
             }
 
             if (result == "Ddos, 20-50 mins.\n")
             {
                 Send("Ddos, 20-50 mins");
-                coockie = null;
+                _coockie = null;
                 goto Start;
             }
 
@@ -177,7 +217,6 @@ namespace TraderV1.Controllers
             }
             else
             {
-                //TODO: возможно ускориться если к типизированному объекту ItemYobit
                 var item = new
                 {
                     Name = valuets,
@@ -228,7 +267,7 @@ namespace TraderV1.Controllers
             Send("Proccess was stoped");
             //list = null;
             //firstCoastRun = 0;
-            coockie = null;
+            _coockie = null;
           
         }
 
